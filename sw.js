@@ -33,7 +33,7 @@ self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
   event.waitUntil(
-    clients.openWindow('https://developers.google.com/web/')
+    clients.openWindow('https://Legenddrd.github.io')
   );
 });
 
@@ -47,6 +47,7 @@ self.addEventListener('pushsubscriptionchange', function(event) {
     })
     .then(function(newSubscription) {
       // TODO: Send to application server
+      
       console.log('[Service Worker] New subscription: ', newSubscription);
     })
   );
