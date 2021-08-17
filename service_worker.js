@@ -48,7 +48,7 @@ self.addEventListener('message', (event) => {
     }
 });
 self.addEventListener('fetch', e =>{
-    console.log("fecthing cache")
+    //console.log("fecthing cache")
     e.respondWith(fetch(e.request).catch(()=> caches.match(e.request)))
 })
 
@@ -71,7 +71,8 @@ self.addEventListener('push', function(event) {
     );
   });
 
-  self.addEventListener('push', function(event) {
+  self.addEventListener('11', function(event) {
+      console.log(event.data)
       if(event.data =='11'){
         var options = {
             body: 'WE SENDING MESSAGES BOIS',

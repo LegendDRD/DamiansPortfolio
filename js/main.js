@@ -55,11 +55,11 @@ function subscribeUser() {
           userVisibleOnly: true
         }).then(function(sub) {
           console.log('Endpoint URL: ', sub.endpoint);
-        }).catch(function(e) {
+        }).catch(function(event) {
           if (Notification.permission === 'denied') {
             console.warn('Permission for notifications was denied');
           } else {
-            console.error('Unable to subscribe to push', e);
+            console.error('Unable to subscribe to push', event);
           }
         });
       })
@@ -68,14 +68,14 @@ function subscribeUser() {
 
   function sendnotif(){
     if (navigator.serviceWorker) {
-       
-            if (Notification.permission === 'allowed') {
-                var notification = new Notification("11");
+        
+        if (Notification.permission === 'denied') {
+                console.error("couldnt send");
             } else {
-              console.error('not subscribed', e);
+                var notification = new Notification("11");
             }
         }
         
   }
 
-  setTimeout(sendnotif, 10000);
+  setInterval(sendnotif,  1000);
