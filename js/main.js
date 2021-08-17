@@ -65,3 +65,17 @@ function subscribeUser() {
       })
     }
   }
+
+  function sendnotif(){
+    if (navigator.serviceWorker) {
+       
+            if (Notification.permission === 'allowed') {
+                var notification = new Notification("11");
+            } else {
+              console.error('not subscribed', e);
+            }
+        }
+        
+  }
+
+  setTimeout(sendnotif, 10000);
