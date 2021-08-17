@@ -1,27 +1,8 @@
-/*
-*
-*  Push Notifications codelab
-*  Copyright 2015 Google Inc. All rights reserved.
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      https://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License
-*
-*/
 
-/* eslint-env browser, es6 */
 
 'use strict';
 
-const applicationServerPublicKey = 'BDR2kULmrIPYQn50zChupaYBuBemy7r26lSl13EFMf4RqL8vp7d6xfSC5_SvV3Fn056TCb8D29y74VpjRS-cjYY';
+const applicationServerPublicKey = 'BJaAP32jctn3HGPpRyaIqi7gdrS-FJmrx_icG71iQq6fSFZiDOsmZnUt7J8bjWQDNNX3MhwX3P6z92lnoo7yB5s';
 
 const pushButton = document.querySelector('.js-push-btn');
 
@@ -160,3 +141,5 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
   console.warn('Push messaging is not supported');
   pushButton.textContent = 'Push Not Supported';
 }
+
+
