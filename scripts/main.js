@@ -42,7 +42,7 @@ function updateBtn() {
 
 function updateSubscriptionOnServer(subscription) {
   // TODO: Send subscription to application server
-  console.log(subscription)
+  console.log(JSON.stringify(subscription));
 
   const subscriptionJson = document.querySelector('.js-subscription-json');
   const subscriptionDetails =
