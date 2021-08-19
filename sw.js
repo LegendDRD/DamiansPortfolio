@@ -1,3 +1,10 @@
+const CacheName = 'v03';
+const cacheAssests = [
+    '/js/main.js',
+    'index.html',
+    'about.html',
+    '/css/style.css'
+];
 
 const applicationServerPublicKey = 'BLno_uYF0FR_23f5vgU8mr2Q61E24p9Bu6rfF-hdScybXpRkPmnElO9-RbzxV-rLmdEbkSYqBIgo2wldN7pqLKE';
 
