@@ -83,7 +83,7 @@ function updateSubscriptionOnServer(subscription) {
       return response.json(); // parses JSON response into native JavaScript objects
     }
 
-    postData('http://197.185.104.253:3000/v1/pushnotification/push', {
+    postData('https://fierce-waters-11286.herokuapp.com/v1/pushnotification/push', {
       "end": subscription
     })
       .then(data => {
