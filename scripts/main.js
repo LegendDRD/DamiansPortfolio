@@ -2,10 +2,10 @@
 function invokeServiceWorkerUpdateFlow(registration) {
   // Need UI element
   // if (confirm('New version for the website has been pushed. Refresh now?')) {
-    //var notification = new Notification("Clicekd allert");
-    if (registration.waiting) {
-      registration.waiting.postMessage('SKIP_WAITING')
-    }
+  //var notification = new Notification("Clicekd allert");
+  if (registration.waiting) {
+    registration.waiting.postMessage('SKIP_WAITING')
+  }
   //}
 }
 
@@ -51,31 +51,7 @@ function updateBtn() {
 function updateSubscriptionOnServer(subscription) {
 
   // TODO: Send subscription to application server
-  console.log(JSON.stringify(subscription)); //send to backend push.js script
 
-
-  async function postData(url = '', data = {}) {
-    const response = await fetch(url, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, *same-origin, omit
-      headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
-  }
-  
-  postData('http://localhost:3000/v1/pushnotification/push', {
-     "filename":"output.pdf" })
-    .then(data => {
-      console.log(data); // JSON data parsed by `data.json()` call
-    });
 
   //TODO remove this code, only for dev
   //------------------------------------------------------------------------
@@ -83,8 +59,37 @@ function updateSubscriptionOnServer(subscription) {
   const subscriptionDetails = document.querySelector('.js-subscription-details');
 
   if (subscription) {
+    
     subscriptionJson.textContent = JSON.stringify(subscription);
     subscriptionDetails.classList.remove('is-invisible');
+
+    console.log(JSON.stringify(subscription)); //send to backend push.js script
+
+
+    async function postData(url = '', data = {}) {
+      const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data) // body data type must match "Content-Type" header
+      });
+      return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    postData('http://localhost:3000/v1/pushnotification/push', {
+      "end": subscription
+    })
+      .then(data => {
+        console.log(data); // JSON data parsed by `data.json()` call
+      });
+
   } else {
     subscriptionDetails.classList.add('is-invisible');
   }
