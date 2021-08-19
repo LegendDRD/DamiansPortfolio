@@ -1,10 +1,9 @@
 const CacheName = 'v03';
 const cacheAssests = [
-    '/js/main.js',
+    '/scripts/main.js',
     'index.html',
-    'about.html',
-    '/css/style.css'
-];
+    '/images/icon.png'
+];//
 
 const applicationServerPublicKey = 'BLno_uYF0FR_23f5vgU8mr2Q61E24p9Bu6rfF-hdScybXpRkPmnElO9-RbzxV-rLmdEbkSYqBIgo2wldN7pqLKE';
 
@@ -13,7 +12,7 @@ function urlB64ToUint8Array(base64String) {
   const base64 = (base64String + padding)
     .replace(/\-/g, '+')
     .replace(/_/g, '/');
-
+//
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
 
@@ -22,9 +21,6 @@ function urlB64ToUint8Array(base64String) {
   }
   return outputArray;
 }
-
-
-
 self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
   console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
@@ -46,7 +42,7 @@ self.addEventListener('notificationclick', function(event) {
     clients.openWindow('https://Legenddrd.github.io')
   );
 });
-
+//////
 self.addEventListener('pushsubscriptionchange', function(event) {
   console.log('[Service Worker]: \'pushsubscriptionchange\' event fired.');
   const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
@@ -62,6 +58,7 @@ self.addEventListener('pushsubscriptionchange', function(event) {
     })
   );
 });
+////
 
 self.addEventListener('install', e => {
   console.log('SW: Installed');
@@ -92,7 +89,8 @@ self.addEventListener('activate', e=>{
 
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') {
-      
+    console.log("Updating cache")
+
       self.skipWaiting();
       event.waitUntil(
           caches.open(CacheName).then(cache => {
@@ -106,7 +104,6 @@ self.addEventListener('message', (event) => {
   }
 });
 self.addEventListener('fetch', e =>{
-  console.log("fecthing cache")
   e.respondWith(fetch(e.request).catch(()=> caches.match(e.request)))
 })
 

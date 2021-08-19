@@ -1,5 +1,13 @@
 
-
+function invokeServiceWorkerUpdateFlow(registration) {
+  // Need UI element
+  // if (confirm('New version for the website has been pushed. Refresh now?')) {
+    //var notification = new Notification("Clicekd allert");
+    if (registration.waiting) {
+      registration.waiting.postMessage('SKIP_WAITING')
+    }
+  //}
+}
 
 const applicationServerPublicKey = 'BLno_uYF0FR_23f5vgU8mr2Q61E24p9Bu6rfF-hdScybXpRkPmnElO9-RbzxV-rLmdEbkSYqBIgo2wldN7pqLKE';
 
@@ -41,21 +49,44 @@ function updateBtn() {
 }
 
 function updateSubscriptionOnServer(subscription) {
+
   // TODO: Send subscription to application server
   console.log(JSON.stringify(subscription)); //send to backend push.js script
+
+
+  async function postData(url = '', data = {}) {
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+  
+  postData('http://localhost:3000/v1/pushnotification/push', {
+     "filename":"output.pdf" })
+    .then(data => {
+      console.log(data); // JSON data parsed by `data.json()` call
+    });
 
   //TODO remove this code, only for dev
   //------------------------------------------------------------------------
   const subscriptionJson = document.querySelector('.js-subscription-json');
-
   const subscriptionDetails = document.querySelector('.js-subscription-details');
-
 
   if (subscription) {
     subscriptionJson.textContent = JSON.stringify(subscription);
-
+    subscriptionDetails.classList.remove('is-invisible');
   } else {
-    subscriptionJson.textContent = "";
+    subscriptionDetails.classList.add('is-invisible');
   }
   //---------------------------------------------------------------------------
 }
@@ -103,13 +134,13 @@ function unsubscribeUser() {
       updateBtn();
     });
 }
-
+//
 function initializeUI() {
   pushButton.addEventListener('click', function () {
     pushButton.disabled = true;
     if (isSubscribed) {
       unsubscribeUser();
-    } else {
+    } else {//
       subscribeUser();
     }
   });
@@ -131,35 +162,32 @@ function initializeUI() {
     });
 }
 
-if (navigator.serviceWorker && 'PushManager' in window) {
+if ('serviceWorker' in navigator && 'PushManager' in window) {
 
-  window.addEventListener('load', async () => {
-    const registration = await navigator.serviceWorker.register('/sw.js')
-
-
-    registration.addEventListener('updatefound', () => {
-
-      if (registration.installing) {
-
-        registration.installing.addEventListener('statechange', () => {
-
-          if (registration.waiting) {
-
-            if (navigator.serviceWorker.controller) {
-              invokeServiceWorkerUpdateFlow(registration)
-            } else {
-
-              console.log('Service Worker initialized for the first time')
-            }
-          }
-        })
-      }
+  navigator.serviceWorker.register('sw.js')
+    .then(function (swReg) {
+      console.log('Service Worker is registered', swReg);
+      swRegistration = swReg;
+      initializeUI();
+      invokeServiceWorkerUpdateFlow(swRegistration);
     })
-  })
+    .catch(function (error) {
+      console.error('Service Worker Error', error);
+    });
+
 
 } else {
   console.warn('Push messaging is not supported');
   pushButton.textContent = 'Push Not Supported';
 }
 
+if (Notification.permission === "granted") {
+
+} else if (Notification.permission !== "denied") {
+  Notification.requestPermission().then(function (permission) {
+    if (permission === "granted") {
+      //var notification = new Notification("Notification enabled");
+    }
+  });
+}
 
