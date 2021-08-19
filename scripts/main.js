@@ -50,20 +50,11 @@ function updateBtn() {
 
 function updateSubscriptionOnServer(subscription) {
 
-  // TODO: Send subscription to application server
-
-
-  //TODO remove this code, only for dev
-  //------------------------------------------------------------------------
-  const subscriptionJson = document.querySelector('.js-subscription-json');
-  const subscriptionDetails = document.querySelector('.js-subscription-details');
 
   if (subscription) {
-    
-    subscriptionJson.textContent = JSON.stringify(subscription);
-    subscriptionDetails.classList.remove('is-invisible');
 
-    console.log(JSON.stringify(subscription)); //send to backend push.js script
+
+    //console.log(JSON.stringify(subscription)); //send to backend push.js script
 
 
     async function postData(url = '', data = {}) {
@@ -90,9 +81,7 @@ function updateSubscriptionOnServer(subscription) {
         console.log(data); // JSON data parsed by `data.json()` call
       });
 
-  } else {
-    subscriptionDetails.classList.add('is-invisible');
-  }
+  } 
   //---------------------------------------------------------------------------
 }
 
