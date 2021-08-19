@@ -1,6 +1,6 @@
 
 
-'use strict';
+
 const applicationServerPublicKey = 'BLno_uYF0FR_23f5vgU8mr2Q61E24p9Bu6rfF-hdScybXpRkPmnElO9-RbzxV-rLmdEbkSYqBIgo2wldN7pqLKE';
 
 const pushButton = document.querySelector('.js-push-btn');
@@ -42,25 +42,32 @@ function updateBtn() {
 
 function updateSubscriptionOnServer(subscription) {
   // TODO: Send subscription to application server
-  console.log(JSON.stringify(subscription));
+  console.log(JSON.stringify(subscription)); //send to backend push.js script
 
+  //TODO remove this code, only for dev
+  //------------------------------------------------------------------------
   const subscriptionJson = document.querySelector('.js-subscription-json');
-  const subscriptionDetails =
-    document.querySelector('.js-subscription-details');
-  console.log(subscription)
+
+  const subscriptionDetails = document.querySelector('.js-subscription-details');
+
+
   if (subscription) {
     subscriptionJson.textContent = JSON.stringify(subscription);
-    subscriptionDetails.classList.remove('is-invisible');
+
   } else {
-    subscriptionDetails.classList.add('is-invisible');
+    subscriptionJson.textContent = "";
   }
+  //---------------------------------------------------------------------------
 }
 
 function subscribeUser() {
+
   const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+
   swRegistration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: applicationServerKey
+
   })
     .then(function (subscription) {
       console.log('User is subscribed.');
@@ -124,19 +131,32 @@ function initializeUI() {
     });
 }
 
-if ('serviceWorker' in navigator && 'PushManager' in window) {
-  console.log('Service Worker and Push is supported');
+if (navigator.serviceWorker && 'PushManager' in window) {
 
-  navigator.serviceWorker.register('sw.js')
-    .then(function (swReg) {
-      console.log('Service Worker is registered', swReg);
+  window.addEventListener('load', async () => {
+    const registration = await navigator.serviceWorker.register('/sw.js')
 
-      swRegistration = swReg;
-      initializeUI();
+
+    registration.addEventListener('updatefound', () => {
+
+      if (registration.installing) {
+
+        registration.installing.addEventListener('statechange', () => {
+
+          if (registration.waiting) {
+
+            if (navigator.serviceWorker.controller) {
+              invokeServiceWorkerUpdateFlow(registration)
+            } else {
+
+              console.log('Service Worker initialized for the first time')
+            }
+          }
+        })
+      }
     })
-    .catch(function (error) {
-      console.error('Service Worker Error', error);
-    });
+  })
+
 } else {
   console.warn('Push messaging is not supported');
   pushButton.textContent = 'Push Not Supported';

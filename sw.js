@@ -1,5 +1,6 @@
 
 const applicationServerPublicKey = 'BLno_uYF0FR_23f5vgU8mr2Q61E24p9Bu6rfF-hdScybXpRkPmnElO9-RbzxV-rLmdEbkSYqBIgo2wldN7pqLKE';
+
 function urlB64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
   const base64 = (base64String + padding)
@@ -14,6 +15,8 @@ function urlB64ToUint8Array(base64String) {
   }
   return outputArray;
 }
+
+
 
 self.addEventListener('push', function(event) {
   console.log('[Service Worker] Push Received.');
@@ -52,5 +55,52 @@ self.addEventListener('pushsubscriptionchange', function(event) {
     })
   );
 });
+
+self.addEventListener('install', e => {
+  console.log('SW: Installed');
+  e.waitUntil(
+      caches.open(CacheName).then(cache => {
+          console.log('SW: Cachiing Files on install');
+          cache.addAll(cacheAssests);
+      })
+  );
+//
+  //self.registration.showNotification("Hello");
+});
+self.addEventListener('activate', e=>{
+  console.log("sw activated");
+  e.waitUntil(
+      caches.keys().then(CacheNames => {
+          return Promise.all(
+              CacheNames.map(cache => {
+                  if(cache!== CacheName){
+                      console.log("deleting cache");
+                      return caches.delete(cache);
+                  }
+              })
+          )
+      })
+  )
+})
+
+self.addEventListener('message', (event) => {
+  if (event.data === 'SKIP_WAITING') {
+      
+      self.skipWaiting();
+      event.waitUntil(
+          caches.open(CacheName).then(cache => {
+              console.log('SW: Cachiing Files after allowing update');
+             // cache.addAll(['/js/main.js']);
+               cache.addAll(cacheAssests);
+          })
+          
+      );
+
+  }
+});
+self.addEventListener('fetch', e =>{
+  console.log("fecthing cache")
+  e.respondWith(fetch(e.request).catch(()=> caches.match(e.request)))
+})
 
 
