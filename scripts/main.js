@@ -48,31 +48,29 @@ function updateBtn() {
   pushButton.disabled = false;
 }
 
-function updateSubscriptionOnServer(subscription) {
+async function postData(url = '', data = {}) {
+  const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data) // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
 
+function updateSubscriptionOnServer(subscription) {
 
   if (subscription) {
 
 
     //console.log(JSON.stringify(subscription)); //send to backend push.js script
-
-
-    async function postData(url = '', data = {}) {
-      const response = await fetch(url, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-          'Content-Type': 'application/json'
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(data) // body data type must match "Content-Type" header
-      });
-      return response.json(); // parses JSON response into native JavaScript objects
-    }
 
     postData('https://fierce-waters-11286.herokuapp.com/v1/pushnotification/push', {
       "end": subscription
@@ -82,6 +80,7 @@ function updateSubscriptionOnServer(subscription) {
       });
 
   } 
+  
   //---------------------------------------------------------------------------
 }
 
@@ -136,6 +135,7 @@ function initializeUI() {
       unsubscribeUser();
     } else {//
       subscribeUser();
+      
     }
   });
 
@@ -160,7 +160,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
 
   navigator.serviceWorker.register('sw.js')
     .then(function (swReg) {
-      console.log('Service Worker is registered', swReg);
+      //console.log('Service Worker is registered', swReg);
       swRegistration = swReg;
       initializeUI();
       invokeServiceWorkerUpdateFlow(swRegistration);
